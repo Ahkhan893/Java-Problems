@@ -241,12 +241,84 @@ public class LinkedListImplementation {
 
         Node prevNode = get(index - 1); // [20]
         Node current = prevNode.next; // [30]
-        prevNode.next = current.next;  // [20].next = [40] --> 30 == 40
+        prevNode.next = current.next;  // [20].next = [40] --> 20 --> 40
         current.next = null;  // Break the reference from [30] to [40], to completely detach it..
         return current;
 
     }
 
+    public void reverse(){
+
+        Node curr = head;
+        Node prev = null;
+
+        while (curr.next !=null){
+             /// [1,2,3,4,5] == curr == head == 1 // next iteration // curr == 2 // 3
+            Node temp = curr.next;
+            // temp == [1].next == 1.[2] == 2 // Second Iteration // 2.[3] == 3 // third // 3.[4] == 4
+            curr.next = prev;
+            // curr.next == null // 1.next[2] now change to 1.next[null] // null<--1  2-->3-->4-->5
+            // second iteration// // 2.next[3] // now change to 2.next[1]  1<--2 3 4 5
+            // third iteration//  3 next[4] // now change to 3.next[2] 1<--2<--3 4 5
+            prev = curr;   /// 1 == prev /// 2 == prev // 3 == prev
+            curr = temp;    // curr == 2 // curr = 3 // curr 4
+
+        }
+
+    }
+
+    public Node reverseRecursion(Node head){
+        if(head == null || head.next == null){
+            return head;
+        }
+        ///  1-->2-->3-->4
+        Node newHead = reverseRecursion(head.next); //call happens until we reach end of Node//newHead = 4
+        // this part will not execute yet ⬇️
+        head.next.next = head;
+        /****
+         * First reverRecursion will keep calling unitl head.next = 3.next[4] is the last Node like 4
+         * Second this line will excuete now head == 3 it's next is 4 and 4.next is null
+         * Now we set 4.next to linked with 3 which is head in this line and reverse it.
+         * 3.next[4].next[null] 4.next is null will linked with head = 3 // 3.4.next == 3
+         * Before 3-->
+         * After 3<--4
+         */
+        // 3.4.null = 3
+        head.next = null; /// now just re-link the value 3.next which is 4 will be remove to null.
+        return newHead;
+
+    }
+
+    public Boolean palindrome(Node head){
+
+        if(head == null){
+            return true;
+        }
+        ///  [1,2,3,2,1] Linked List
+        Node mid = midOfLinkedList(head); /// middle will be 3.
+        Node last = reverseRecursion(mid.next); /// 3.next[2] == 2
+        /// this is reverse halfed reversed linkedlist 1--2--3--1-->2
+        Node curr = head; /// 1
+        while (last !=null){
+            if(last.data !=curr.data){ /// last.data == 1 != curr.data == 1 // 1 == 1 // true
+                return false;
+            }
+             last =last.next; // 1 .next == 2
+             curr = curr.next; // 1.next == 2
+        }
+        return  true;
+    }
+
+    private Node midOfLinkedList(Node head) {
+        Node slow = head;
+        Node fast = head;
+        while (fast != null && fast.next !=null){
+
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
 
 
 }

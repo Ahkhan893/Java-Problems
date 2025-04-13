@@ -320,6 +320,29 @@ public class LinkedListImplementation {
         return slow;
     }
 
+    public Node detectFirstNode(Node head){
+        Node meet = detctCycle(head);
+        Node start = head;
+        while (start!=meet){
+            start = start.next;
+            meet = meet.next;
+        }
+        return start;
+    }
+
+    public Node detctCycle(Node head){
+        Node slow = head.next;
+        Node fast = head.next.next;
+        while (fast!=null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast){
+                return slow;
+            }
+        }
+        return null;
+    }
+
 
 }
 
